@@ -1,0 +1,49 @@
+#include<stdio.h>
+#include<stdlib.h>
+int main(void)
+{
+	int i,j,k;
+	DAC_data a[][],b[][],c[][];
+	DAC_shape(a,int,10,100);
+	DAC_shape(b,int,100,10);
+	DAC_shape(c,int,10,10);
+	DAC_rw<| a,b>
+	{
+		for(i=0;i<a.range[0];i++)
+		{
+			k = i%10 + 1;
+			for(j=0;j<a.range[1];j++)
+			{
+				a[i][j] = k;
+				b[j][i] = j%10 + 1;
+			}
+		}
+	}
+	<a,b,c> => mtov(vm);
+	DAC_rw<c|>
+	{
+		for(i=0;i<10;i++)
+		{
+			printf("%d\n",c[i][i]);
+		}
+	}
+	return 0;
+}
+//DAC_shell example
+DAC_shell mtov()<a[][],b[][],c[][]>
+{
+	dac_index i,j;
+	a[i][],b[][j] <=> c[i][j];
+}
+//DAC_calc example
+DAC_calc vm()<a[],b[],c>
+{
+	int i;
+	a.type num;  //hahahahaha
+	num = 0;
+	for(i=0;i<a.range[0];i++)
+	{
+		num += a[i]*b[i];
+	}
+	c = num;
+}
